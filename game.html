@@ -638,6 +638,7 @@ function generateFood() {
       clearInterval(timerId);
       document.removeEventListener("keydown", control);
       messageDisplay.innerHTML = `💀 <b>Game Over!</b> Final Score: ${score}<br>Refresh or click Restart to play again.`;
+      alert(`💀 Game Over! Final Score: ${score}  Refresh or click Restart to play again.`)
     }
 
     // Event Listeners
