@@ -409,120 +409,120 @@
       else if (e.key === "ArrowRight" && direction !== -1) direction = 1;
     }
 
-function move() {
-  removeSnake();
+    function move() {
+      removeSnake();
 
-  const head = snake[0] + direction;
+      const head = snake[0] + direction;
 
-  // Collision Detection
-  if (
-    head >= width * width ||
-    head < 0 ||
-    (direction === 1 && head % width === 0) ||
-    (direction === -1 && snake[0] % width === 0) ||
-    cells[head].classList.contains("snake")
-  ) {
-    gameOver();
-    return;
-  }
+      // Collision Detection
+      if (
+        head >= width * width ||
+        head < 0 ||
+        (direction === 1 && head % width === 0) ||
+        (direction === -1 && snake[0] % width === 0) ||
+        cells[head].classList.contains("snake")
+      ) {
+        gameOver();
+        return;
+      }
 
-  snake.unshift(head); // Move head
-  let shouldGrow = false;
-  let justAte = false;
-  let newType = "";
+      snake.unshift(head); // Move head
+      let shouldGrow = false;
+      let justAte = false;
+      let newType = "";
 
-  // Check if food is eaten
-  if (cells[head].classList.contains("food")) {
-    justAte = true;
-    const type = getFoodType(cells[head]);
-    applyArrayOperation(cells[head]);
-    shouldGrow = type === "push";
+      // Check if food is eaten
+      if (cells[head].classList.contains("food")) {
+        justAte = true;
+        const type = getFoodType(cells[head]);
+        applyArrayOperation(cells[head]);
+        shouldGrow = type === "push";
 
-    // Remove food visuals
-    cells[head].classList.remove("food", "push", "splice", "reverse", "sort", "filter");
-    cells[head].removeAttribute("data-value");
+        // Remove food visuals
+        cells[head].classList.remove("food", "push", "splice", "reverse", "sort", "filter");
+        cells[head].removeAttribute("data-value");
 
-    score++;
-    scoreDisplay.textContent = "Score: " + score;
+        score++;
+        scoreDisplay.textContent = "Score: " + score;
 
-    clearInterval(timerId);
-    intervalTime *= speed;
-    timerId = setInterval(move, intervalTime);
+        clearInterval(timerId);
+        intervalTime *= speed;
+        timerId = setInterval(move, intervalTime);
 
-    checkLevelProgress();
-  }
+        checkLevelProgress();
+      }
 
-  // Remove tail if not growing
-  if (!shouldGrow) {
-    const tail = snake.pop();
-    cells[tail].classList.remove("snake");
-    cells[tail].textContent = "";
-  }
+      // Remove tail if not growing
+      if (!shouldGrow) {
+        const tail = snake.pop();
+        cells[tail].classList.remove("snake");
+        cells[tail].textContent = "";
+      }
 
-  drawSnake();
+      drawSnake();
 
-  // ✅ NOW place new food (AFTER board is updated)
-  if (justAte) {
-    newType = generateFood();
-    updateInfoBox(newType);
-  }
-}
-
-
-
-
-function generateFood() {
-  const availableCells = [];
-
-  for (let i = 0; i < cells.length; i++) {
-    // Prevent placing food in current snake or in the same cell again
-    if (!snake.includes(i) && i !== foodIndex) {
-      availableCells.push(i);
+      // ✅ NOW place new food (AFTER board is updated)
+      if (justAte) {
+        newType = generateFood();
+        updateInfoBox(newType);
+      }
     }
-  }
-
-  if (availableCells.length === 0) return "";
-
-  let operations = ["push", "splice"];
-  if (currentLevel >= 2) operations.push("reverse", "sort");
-  if (currentLevel >= 3) operations.push("filter");
-
-  const type = operations[Math.floor(Math.random() * operations.length)];
-  const newFoodIndex = availableCells[Math.floor(Math.random() * availableCells.length)];
-
-  const foodCell = cells[newFoodIndex];
-  foodCell.classList.remove("food", "push", "splice", "reverse", "sort", "filter");
-  foodCell.classList.add("food", type);
-
-  if (type === "push") {
-    const value = Math.floor(Math.random() * 100);
-    foodCell.setAttribute("data-value", value);
-    foodCell.textContent = value;
-  } else {
-    foodCell.removeAttribute("data-value");
-    foodCell.textContent = type[0].toUpperCase();
-  }
-
-  foodIndex = newFoodIndex; // 🆕 update global foodIndex after placing
-
-  return type;
-}
 
 
 
 
+    function generateFood() {
+      const availableCells = [];
+
+      for (let i = 0; i < cells.length; i++) {
+        // Prevent placing food in current snake or in the same cell again
+        if (!snake.includes(i) && i !== foodIndex) {
+          availableCells.push(i);
+        }
+      }
+
+      if (availableCells.length === 0) return "";
+
+      let operations = ["push", "splice"];
+      if (currentLevel >= 2) operations.push("reverse", "sort");
+      if (currentLevel >= 3) operations.push("filter");
+
+      const type = operations[Math.floor(Math.random() * operations.length)];
+      const newFoodIndex = availableCells[Math.floor(Math.random() * availableCells.length)];
+
+      const foodCell = cells[newFoodIndex];
+      foodCell.classList.remove("food", "push", "splice", "reverse", "sort", "filter");
+      foodCell.classList.add("food", type);
+
+      if (type === "push") {
+        const value = Math.floor(Math.random() * 100);
+        foodCell.setAttribute("data-value", value);
+        foodCell.textContent = value;
+      } else {
+        foodCell.removeAttribute("data-value");
+        foodCell.textContent = type[0].toUpperCase();
+      }
+
+      foodIndex = newFoodIndex; // 🆕 update global foodIndex after placing
+
+      return type;
+    }
 
 
 
 
-   function getFoodType(cell) {
-  if (cell.classList.contains("push")) return "push";
-  if (cell.classList.contains("splice")) return "splice";
-  if (cell.classList.contains("reverse")) return "reverse";
-  if (cell.classList.contains("sort")) return "sort";
-  if (cell.classList.contains("filter")) return "filter";
-  return "";
-}
+
+
+
+
+    function getFoodType(cell) {
+      if (cell.classList.contains("push")) return "push";
+      if (cell.classList.contains("splice")) return "splice";
+      if (cell.classList.contains("reverse")) return "reverse";
+      if (cell.classList.contains("sort")) return "sort";
+      if (cell.classList.contains("filter")) return "filter";
+      return "";
+    }
 
 
     // Generate Food
@@ -636,28 +636,31 @@ function generateFood() {
 
     // Game Over
     function gameOver() {
-  gameRunning = false;
-  clearInterval(timerId);
-  document.removeEventListener("keydown", control);
-  messageDisplay.innerHTML = `💀 <b>Game Over!</b> Final Score: ${score}<br>Refresh or click Restart to play again.`;
+      gameRunning = false;
+      clearInterval(timerId);
+      document.removeEventListener("keydown", control);
+      messageDisplay.innerHTML = `💀 <b>Game Over!</b> Final Score: ${score}<br>Refresh or click Restart to play again.`;
 
-  Swal.fire({
-    title: '💀 Game Over!',
-    html: `<strong>Final Score:</strong> ${score}<br><br>Would you like to play again?`,
-    icon: 'error',
-    showCancelButton: true,
-    confirmButtonText: '🔁 Restart',
-    cancelButtonText: '❌ Exit',
-    background: '#1a1a2e',
-    color: '#e6e6e6',
-    confirmButtonColor: '#4cc9f0',
-    cancelButtonColor: '#f72585',
-  }).then((result) => {
-    if (result.isConfirmed) {
-      initGame();
+      Swal.fire({
+        title: '💀 Game Over!',
+        html: `<strong>Final Score:</strong> ${score}<br><br>Would you like to play again?`,
+        icon: 'error',
+        showCancelButton: true,
+        confirmButtonText: '🔁 Restart',
+        cancelButtonText: '❌ Exit',
+        background: '#1a1a2e',
+        color: '#e6e6e6',
+        confirmButtonColor: '#4cc9f0',
+        cancelButtonColor: '#f72585',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          initGame();
+        } else {
+          window.location.href = "index.html"; // 🔁 or your actual home page
+        }
+      });
+
     }
-  });
-}
 
 
     // Event Listeners
