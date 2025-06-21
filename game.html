@@ -246,6 +246,87 @@
         width: 300px;
       }
     }
+
+    /* Train animation */
+        .train-track {
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(90deg, var(--dark-light), var(--gray), var(--dark-light));
+            margin: 40px auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .train {
+            display: flex;
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            animation: trainMove 15s linear infinite;
+        }
+
+        .train-car {
+            background: var(--primary);
+            color: var(--dark);
+            padding: 15px 20px;
+            margin-right: 5px;
+            border-radius: 6px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 50px;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .train-car::after {
+            content: '';
+            position: absolute;
+            right: -3px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 20px;
+            background: var(--dark-light);
+            border-radius: 3px;
+        }
+
+        .train-car:first-child {
+            background: var(--secondary);
+            padding-left: 25px;
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+        }
+
+        .train-car:first-child::before {
+            content: '🚂';
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+
+        .train-car:last-child {
+            margin-right: 0;
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        .train-car:last-child::after {
+            display: none;
+        }
+
+        @keyframes trainMove {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
   </style>
 </head>
 
@@ -272,6 +353,18 @@
       </div>
     </div>
   </div>
+    <!-- Train animation -->
+    <div class="train-track">
+        <div class="train" id="train">
+            <div class="train-car">[</div>
+            <div class="train-car">10</div>
+            <div class="train-car">20</div>
+            <div class="train-car">30</div>
+            <div class="train-car">40</div>
+            <div class="train-car">50</div>
+            <div class="train-car">]</div>
+        </div>
+    </div>
 
   <div id="rules-modal" class="modal">
     <div class="modal-content">
@@ -690,6 +783,28 @@
             }
         `;
     document.head.appendChild(style);
+
+           // Initialize particles when page loads
+        window.onload = function() {
+            
+            // Make train array change periodically
+            setInterval(() => {
+                const train = document.getElementById('train');
+                const cars = train.querySelectorAll('.train-car');
+                const values = [ 10, 20, 30, 40, 50, 100];
+                
+                cars.forEach((car, index) => {
+                    if (index !== 0 && index !== cars.length - 1) {
+                        const randomValue = values[Math.floor(Math.random() * values.length)];
+                        car.textContent = randomValue;
+                        
+                        // Random color for fun
+                        const colors = ['#38bdf8', '#f472b6', '#22d3ee', '#a78bfa', '#fbbf24'];
+                        car.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    }
+                });
+            }, 1000);
+        };
   </script>
 </body>
 
