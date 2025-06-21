@@ -5,6 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Array Snake Game</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -634,12 +636,29 @@ function generateFood() {
 
     // Game Over
     function gameOver() {
-      gameRunning = false;
-      clearInterval(timerId);
-      document.removeEventListener("keydown", control);
-      messageDisplay.innerHTML = `💀 <b>Game Over!</b> Final Score: ${score}<br>Refresh or click Restart to play again.`;
-      alert(`💀 Game Over! Final Score: ${score}  Refresh or click Restart to play again.`)
+  gameRunning = false;
+  clearInterval(timerId);
+  document.removeEventListener("keydown", control);
+  messageDisplay.innerHTML = `💀 <b>Game Over!</b> Final Score: ${score}<br>Refresh or click Restart to play again.`;
+
+  Swal.fire({
+    title: '💀 Game Over!',
+    html: `<strong>Final Score:</strong> ${score}<br><br>Would you like to play again?`,
+    icon: 'error',
+    showCancelButton: true,
+    confirmButtonText: '🔁 Restart',
+    cancelButtonText: '❌ Exit',
+    background: '#1a1a2e',
+    color: '#e6e6e6',
+    confirmButtonColor: '#4cc9f0',
+    cancelButtonColor: '#f72585',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      initGame();
     }
+  });
+}
+
 
     // Event Listeners
     rulesBtn.addEventListener("click", () => {
